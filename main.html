@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>مين بيعرف التاتي أكتر؟</title>
+
+  <!-- Meta Tags -->
+  <meta name="description" content="تطبيق ترفيهي لاختبار من يعرف 'التاتي' أكتر.">
+  <meta name="keywords" content="تاتي, اختبار, لعبة, تحدي, ترفيه">
+  <meta name="author" content="Kiroloes Reda Wassef">
+  <meta name="language" content="ar">
+  <meta name="robots" content="index, follow">
+
+  <!-- Favicon -->
+  <link rel="icon" href="/pic/logo.png" type="image/x-icon">
+
+  <!-- Google Fonts + Tailwind + Font Awesome -->
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+
+  <!-- Custom Font -->
+  <style>
+    body {
+      font-family: 'Cairo', sans-serif;
+      background-color: white !important;
+    }
+  </style>
+</head>
+<body class=" text-gray-800">
+
+
+  <div id="gameModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+  <div class="bg-white rounded-lg shadow-lg w-[90%] max-w-2xl p-6 relative">
+    
+    <!-- زر إغلاق -->
+    <button onclick="closeModal()" class="absolute top-2 right-2 text-gray-600 hover:text-red-500 text-2xl font-bold">
+      &times;
+    </button>
+
+    <h2 class="text-2xl font-bold text-center mb-4 text-blue-600">📝 تعليمات اللعبة</h2>
+
+    <div class="text-gray-800 space-y-3 text-right leading-loose">
+      <p>🎯 <strong>فكرة اللعبة:</strong> اللعبة عبارة عن أسئلة شخصية بتجاوب عليها حسب معرفتك بصاحبك.</p>
+      <p>🕹️ <strong>طريقة اللعب:</strong></p>
+      <ul class="list-disc pr-5">
+        <li>ادخل اسمك واسم صاحبك.</li>
+        <li>اختار عدد الأسئلة: 5، 10، 15، أو 20.</li>
+        <li>كل سؤال هيكون له 4 اختيارات، والاختيار الأخير مفتوح تكتبه بنفسك.</li>
+        <li>بعد ما تجاوب، هتشوف نتيجتك.</li>
+      </ul>
+      <p>🧠 <strong>نصائح:</strong></p>
+      <ul class="list-disc pr-5">
+        <li>افتكر كويس ردود صاحبك.</li>
+        <li>لو مش لاقي اختيار مناسب، استخدم الأخير.</li>
+      </ul>
+      <p>✅ <strong>هدف اللعبة:</strong> نتسلّى ونشوف مين بيعرف التاني أكتر!</p>
+    </div>
+  </div>
+</div>
+
+<!-- Header -->
+<header class="shadow-md bg-gradient-to-r from-blue-900 to-blue-800">
+  <nav class="container mx-auto">
+    <ul class="flex flex-row-reverse justify-between items-center p-4 px-6">
+      
+      <!-- زر التعليمات -->
+      <li onclick="openModal()" class="text-lg md:text-xl font-semibold text-orange-400 hover:text-white cursor-pointer transition duration-200 flex items-center gap-2">
+        <i class="fas fa-question-circle text-white"></i>
+        تعليمات
+      </li>
+
+      <!-- شعار -->
+      <li>
+        <img 
+          src="./pic/logo.png" 
+          alt="شعار التطبيق" 
+          width="90" 
+          height="90"
+          class="rounded-full border-4 border-white shadow-lg"
+        >
+      </li>
+
+      <!-- رابط المساهمات -->
+      <a href="history.html" class="text-lg md:text-xl font-semibold text-orange-400 hover:text-white cursor-pointer transition duration-200 flex items-center gap-2">
+        <i class="fas fa-clock-rotate-left text-white"></i>
+        المساهمات
+      </a>
+    </ul>
+  </nav>
+</header>
+  <!-- Main Content -->
+  <main style="height: 85vh" class=" flex items-center justify-center bg-gradient-to-b from-slate-50 to-white">
+    <section class="w-full max-w-3xl p-6 bg-white rounded-xl shadow-lg mt-10 mb-10">
+      <h2 class="text-center text-3xl font-bold text-blue-800 mb-6">جاهزين علشان تعرفوا مين بيعرف التاني أكتر؟</h2>
+
+      <!-- اختيار عدد الأسئلة -->
+      <div class="mb-10">
+        <h4 class="text-center text-xl font-semibold text-gray-700 mb-4">اختار عدد الأسئلة</h4>
+        <div class="flex flex-wrap gap-4 justify-center">
+          <button onclick="selectNumber(this.value)" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2 rounded-lg transition " value="5">5 أسئلة</button>
+          <button onclick="selectNumber(this.value)" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2 rounded-lg transition " value="10">10 أسئلة</button>
+          <button onclick="selectNumber(this.value)" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2 rounded-lg transition " value="15">15 أسئلة</button>
+          <button onclick="selectNumber(this.value)" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2 rounded-lg transition " value="20">20 أسئلة</button>
+        </div>
+      </div>
+
+      <!-- إدخال الأسماء -->
+      <form id="nameForm" class="flex flex-col items-center gap-8">
+        <div class="w-full">
+          <label for="friend1" class="block text-md font-medium text-gray-700 text-right mb-1 pr-2">اسم الصديق الأول</label>
+          <input type="text" id="friend1" name="friend1" required class="w-full p-3 rounded-md bg-slate-50 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-400">
+        </div>
+        <div class="w-full">
+          <label for="friend2" class="block text-md font-medium text-gray-700 text-right mb-1 pr-2">اسم الصديق الثاني</label>
+          <input type="text" id="friend2" name="friend2" required class="w-full p-3 rounded-md bg-slate-50 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-400">
+        </div>
+        <button onclick="UsersName()" type="submit" class="mt-6 bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-lg font-semibold transition">يلا نبدأ الأسئلة</button>
+      </form>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-blue-900 text-center py-6">
+    <p class="text-sm text-white font-medium">
+      جميع الحقوق محفوظة © 2025 
+      <span class="text-orange-300 font-bold">مين بيعرف التاتي أكتر؟</span> 
+      بواسطة 
+      <span class="text-yellow-400 font-bold">Kiroloes Reda</span>
+    </p>
+  </footer>
+
+
+
+  <!-- JavaScript to Save Names -->
+   <script>
+    // dataBase for all question
+    const questions = [
+  {
+    question: "إيه هو اللون المفضل عند التاتي؟",
+    options: ["أحمر", "أزرق", "أسود", "أخضر"],
+     answer: "",
+    
+  },
+  {
+    question: "إيه أكتر أكلة بيحبها التاتي؟",
+    options: ["محشي", "بيتزا", "مكرونة", "كشري"],
+     answer: "",
+  },
+  {
+  
+    question: "إمتى بيحب ينام التاتي؟",
+    options: ["قبل 10 مساءً", "بعد 12 صباحًا", "في العصر", "مش بينام"],
+     answer: "",
+  },
+  {
+    question: "لو فاضي، هايحب يعمل إيه؟",
+    options: ["يتفرج على فيلم", "ينام", "يخرج", "يلعب بلايستيشن"],
+     answer: "",
+  },
+  {
+    question: "إيه نوع الموبايل اللي بيستخدمه التاتي؟",
+    options: ["iPhone", "Samsung", "Huawei", "Xiaomi"],
+     answer: "",
+  },
+  {
+    question: "إيه أكتر مادة كان بيحبها في المدرسة؟",
+    options: ["رياضة", "علوم", "عربي", "إنجليزي"],
+     answer: "",
+  },
+  {
+    question: "لو طلب أكلة سريعة، هايطلب إيه؟",
+    options: ["برجر", "شاورما", "فراخ بانيه", "فلافل"],
+     answer: "",
+  },
+  {
+    question: "مين أكتر شخص بيكلمه في اليوم؟",
+    options: ["أمه", "صاحبه", "زميله في الشغل", "حد تاني"],
+     answer: "",
+  },
+  {
+    question: "إيه هو برج التاتي؟",
+    options: ["الجدي", "السرطان", "الأسد", "الدلو"],
+     answer: "",
+  },
+  {
+    question: "إيه أكتر حاجة بتخوف التاتي؟",
+    options: ["الظلمة", "الفشل", "المرتفعات", "الكلاب"],
+     answer: "",
+  },
+  {
+    question: "إيه أول حاجة بيعملها لما يصحى؟",
+    options: ["يفتح الموبايل", "يغسل وشه", "يفطر", "يرجع ينام"],
+     answer: "",
+  },
+  {
+    question: "إيه أكتر صفة الناس بتشوفها فيه؟",
+    options: ["طيب", "مضحك", "عصبي", "غريب"],
+     answer: "",
+  },
+  {
+    question: "إيه الرياضة المفضلة عنده؟",
+    options: ["كرة قدم", "سباحة", "جيم", "جري"],
+     answer: "",
+  },
+  {
+    question: "إيه البلد اللي بيتمنى يسافر ليها؟",
+    options: ["تركيا", "إيطاليا", "اليابان", "فرنسا"],
+     answer: "",
+  },
+  {
+    question: "إيه أكتر حاجة بيعملها لما يزعل؟",
+    options: ["يسكت", "يتكلم", "يخرج", "يأكل"],
+     answer: "",
+  },
+  {
+    question: "إيه نوع الأفلام اللي بيحبها؟",
+    options: ["أكشن", "رومانسي", "كوميدي", "رعب"],
+     answer: "",
+  },
+  {
+    question: "لو عنده يوم أجازة، هايعمل إيه؟",
+    options: ["يخرج مع أصحابه", "ينام", "يسافر", "يتفرج على نتفليكس"],
+     answer: "",
+  },
+  {
+    question: "إيه الحاجة اللي مش بيستغنى عنها؟",
+    options: ["سماعات", "موبايل", "سلسلة", "ساعة"],
+     answer: "",
+  },
+  {
+    question: "مين أكتر مغني بيحبه؟",
+    options: ["عمرو دياب", "ويجز", "محمد حماقي", "تامر حسني"],
+     answer: "",
+  },
+  {
+    question: "إيه هو مشروبه المفضل؟",
+    options: ["قهوة", "شاي", "بيبسي", "عصير برتقال"],
+     answer: "",
+  }
+];
+  
+    // to select from user number of Question
+
+    // if user not selected number of question ,default =5
+    let numberQuestion=5;
+    localStorage.setItem("numberQuestion",numberQuestion);
+
+    // method for select
+    function selectNumber(value){
+         numberQuestion=value;
+         localStorage.setItem("numberQuestion",numberQuestion);
+        //   to save selected number at local storage
+         console.log( localStorage.getItem("numberQuestion"));
+         console.log(typeof localStorage.getItem("numberQuestion"));
+
+        //  change selectd button and remove old selected background
+        const buttons = document.querySelectorAll("button");
+        buttons.forEach(btn => btn.classList.remove("bg-green-600"));
+        event.target.classList.add("bg-green-600");
+    }
+
+// all user enter the playGame
+let history=JSON.parse(localStorage.getItem("History")) ||[];
+
+// method for config all data 
+function UsersName() {
+  const userInput = document.querySelectorAll("input");
+  const currentUser = []; 
+     
+  userInput.forEach(e => {
+    const userPlayerObject = {
+      name: e.value,
+      score:0,
+      numberQuestionRight:0,
+      numberQuestionFalse:0,
+    };
+    currentUser.push(userPlayerObject);
+  });
+
+ history.push(currentUser)
+  localStorage.setItem("currentUser", JSON.stringify(currentUser));
+  localStorage.setItem("History",JSON.stringify(history));
+  
+  return false;
+}
+
+
+
+   </script>
+
+   <script src="./main.js"></script>
+
+</body>
+</html>
