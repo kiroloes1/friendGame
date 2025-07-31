@@ -27,6 +27,8 @@
       background-color: white !important;
     }
   </style>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 </head>
 <body class=" text-gray-800">
 
@@ -95,16 +97,7 @@
     <section class="w-full max-w-3xl p-6 bg-white rounded-xl shadow-lg mt-10 mb-10">
       <h2 class="text-center text-3xl font-bold text-blue-800 mb-6">جاهزين علشان تعرفوا مين بيعرف التاني أكتر؟</h2>
 
-      <!-- اختيار عدد الأسئلة -->
-      <div class="mb-10">
-        <h4 class="text-center text-xl font-semibold text-gray-700 mb-4">اختار عدد الأسئلة</h4>
-        <div class="flex flex-wrap gap-4 justify-center">
-          <button onclick="selectNumber(this.value)" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2 rounded-lg transition " value="5">5 أسئلة</button>
-          <button onclick="selectNumber(this.value)" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2 rounded-lg transition " value="10">10 أسئلة</button>
-          <button onclick="selectNumber(this.value)" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2 rounded-lg transition " value="15">15 أسئلة</button>
-          <button onclick="selectNumber(this.value)" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2 rounded-lg transition " value="20">20 أسئلة</button>
-        </div>
-      </div>
+
 
       <!-- إدخال الأسماء -->
       <form id="nameForm" class="flex flex-col items-center gap-8">
@@ -116,9 +109,25 @@
           <label for="friend2" class="block text-md font-medium text-gray-700 text-right mb-1 pr-2">اسم الصديق الثاني</label>
           <input type="text" id="friend2" name="friend2" required class="w-full p-3 rounded-md bg-slate-50 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-400">
         </div>
-        <button onclick="UsersName()" type="submit" class="mt-6 bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-lg font-semibold transition">يلا نبدأ الأسئلة</button>
+       
       </form>
-    </section>
+
+
+            <!-- اختيار عدد الأسئلة -->
+      <div class="my-10 countOfQuestion hidden">
+        <h4 class="text-center text-xl font-semibold text-gray-700 mb-4">اختار عدد الأسئلة</h4>
+        <div class="flex flex-wrap gap-4 justify-center">
+          <button onclick="selectNumber(this.value)" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2 rounded-lg transition " value="5">5 أسئلة</button>
+          <button onclick="selectNumber(this.value)" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2 rounded-lg transition " value="10">10 أسئلة</button>
+          <button onclick="selectNumber(this.value)" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2 rounded-lg transition " value="15">15 أسئلة</button>
+          <button onclick="selectNumber(this.value)" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2 rounded-lg transition " value="20">20 أسئلة</button>
+        </div>
+      </div>
+
+      <div class="flex justify-center">
+       <button onclick="UsersName(event)" type="submit" class=" mt-6 bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-lg font-semibold transition">يلا نبدأ الأسئلة</button>
+  </div>
+      </section>
   </main>
 
   <!-- Footer -->
@@ -135,138 +144,34 @@
 
   <!-- JavaScript to Save Names -->
    <script>
-    // dataBase for all question
-    const questions = [
-  {
-    question: "إيه هو اللون المفضل عند التاتي؟",
-    options: ["أحمر", "أزرق", "أسود", "أخضر"],
-     answer: "",
-    
-  },
-  {
-    question: "إيه أكتر أكلة بيحبها التاتي؟",
-    options: ["محشي", "بيتزا", "مكرونة", "كشري"],
-     answer: "",
-  },
-  {
-  
-    question: "إمتى بيحب ينام التاتي؟",
-    options: ["قبل 10 مساءً", "بعد 12 صباحًا", "في العصر", "مش بينام"],
-     answer: "",
-  },
-  {
-    question: "لو فاضي، هايحب يعمل إيه؟",
-    options: ["يتفرج على فيلم", "ينام", "يخرج", "يلعب بلايستيشن"],
-     answer: "",
-  },
-  {
-    question: "إيه نوع الموبايل اللي بيستخدمه التاتي؟",
-    options: ["iPhone", "Samsung", "Huawei", "Xiaomi"],
-     answer: "",
-  },
-  {
-    question: "إيه أكتر مادة كان بيحبها في المدرسة؟",
-    options: ["رياضة", "علوم", "عربي", "إنجليزي"],
-     answer: "",
-  },
-  {
-    question: "لو طلب أكلة سريعة، هايطلب إيه؟",
-    options: ["برجر", "شاورما", "فراخ بانيه", "فلافل"],
-     answer: "",
-  },
-  {
-    question: "مين أكتر شخص بيكلمه في اليوم؟",
-    options: ["أمه", "صاحبه", "زميله في الشغل", "حد تاني"],
-     answer: "",
-  },
-  {
-    question: "إيه هو برج التاتي؟",
-    options: ["الجدي", "السرطان", "الأسد", "الدلو"],
-     answer: "",
-  },
-  {
-    question: "إيه أكتر حاجة بتخوف التاتي؟",
-    options: ["الظلمة", "الفشل", "المرتفعات", "الكلاب"],
-     answer: "",
-  },
-  {
-    question: "إيه أول حاجة بيعملها لما يصحى؟",
-    options: ["يفتح الموبايل", "يغسل وشه", "يفطر", "يرجع ينام"],
-     answer: "",
-  },
-  {
-    question: "إيه أكتر صفة الناس بتشوفها فيه؟",
-    options: ["طيب", "مضحك", "عصبي", "غريب"],
-     answer: "",
-  },
-  {
-    question: "إيه الرياضة المفضلة عنده؟",
-    options: ["كرة قدم", "سباحة", "جيم", "جري"],
-     answer: "",
-  },
-  {
-    question: "إيه البلد اللي بيتمنى يسافر ليها؟",
-    options: ["تركيا", "إيطاليا", "اليابان", "فرنسا"],
-     answer: "",
-  },
-  {
-    question: "إيه أكتر حاجة بيعملها لما يزعل؟",
-    options: ["يسكت", "يتكلم", "يخرج", "يأكل"],
-     answer: "",
-  },
-  {
-    question: "إيه نوع الأفلام اللي بيحبها؟",
-    options: ["أكشن", "رومانسي", "كوميدي", "رعب"],
-     answer: "",
-  },
-  {
-    question: "لو عنده يوم أجازة، هايعمل إيه؟",
-    options: ["يخرج مع أصحابه", "ينام", "يسافر", "يتفرج على نتفليكس"],
-     answer: "",
-  },
-  {
-    question: "إيه الحاجة اللي مش بيستغنى عنها؟",
-    options: ["سماعات", "موبايل", "سلسلة", "ساعة"],
-     answer: "",
-  },
-  {
-    question: "مين أكتر مغني بيحبه؟",
-    options: ["عمرو دياب", "ويجز", "محمد حماقي", "تامر حسني"],
-     answer: "",
-  },
-  {
-    question: "إيه هو مشروبه المفضل؟",
-    options: ["قهوة", "شاي", "بيبسي", "عصير برتقال"],
-     answer: "",
-  }
-];
-  
-    // to select from user number of Question
 
-    // if user not selected number of question ,default =5
-    let numberQuestion=5;
-    localStorage.setItem("numberQuestion",numberQuestion);
-
-    // method for select
-    function selectNumber(value){
-         numberQuestion=value;
-         localStorage.setItem("numberQuestion",numberQuestion);
-        //   to save selected number at local storage
-         console.log( localStorage.getItem("numberQuestion"));
-         console.log(typeof localStorage.getItem("numberQuestion"));
-
-        //  change selectd button and remove old selected background
-        const buttons = document.querySelectorAll("button");
-        buttons.forEach(btn => btn.classList.remove("bg-green-600"));
-        event.target.classList.add("bg-green-600");
-    }
 
 // all user enter the playGame
 let history=JSON.parse(localStorage.getItem("History")) ||[];
 
+
+const userInputs = document.querySelectorAll("input");
+const countSection = document.querySelector(".countOfQuestion");
+
+// دالة للتشييك التلقائي
+function checkInputsFilled() {
+  if (userInputs[0].value.trim() !== "" && userInputs[1].value.trim() !== "") {
+    countSection.classList.remove("hidden");
+  } else {
+    countSection.classList.add("hidden");
+  }
+}
+
+// اربط الحدث على كل input
+userInputs.forEach(input => {
+  input.addEventListener("input", checkInputsFilled);
+});
+
 // method for config all data 
-function UsersName() {
+function UsersName(event) {
   const userInput = document.querySelectorAll("input");
+    event.preventDefault();
+  
   const currentUser = []; 
      
   userInput.forEach(e => {
@@ -275,15 +180,43 @@ function UsersName() {
       score:0,
       numberQuestionRight:0,
       numberQuestionFalse:0,
+      Allquestion:[],
     };
     currentUser.push(userPlayerObject);
+
   });
 
  history.push(currentUser)
   localStorage.setItem("currentUser", JSON.stringify(currentUser));
   localStorage.setItem("History",JSON.stringify(history));
+
+  if(userInput[0].value===""){
+     Swal.fire({
+    icon: 'warning',
+    title: 'تنبيه',
+    text: 'من فضلك اًملاء الحقول اولا' ,
+    confirmButtonText: 'حسناً',
+    confirmButtonColor: '#f97316'
+  });
+  return;
+  }
+else if (JSON.parse(localStorage.getItem("ConfirmSelected")) === 0) {
+  Swal.fire({
+    icon: 'warning',
+    title: 'تنبيه',
+    text: 'من فضلك اختر عدد الأسئلة أولاً',
+    confirmButtonText: 'حسناً',
+    confirmButtonColor: '#f97316'
+  });
+  return;
+}
+
+if (JSON.parse(localStorage.getItem("ConfirmSelected"))) {
+  window.location.href = "questions.html"; // غير الاسم حسب صفحتك
+}
   
-  return false;
+
+
 }
 
 
