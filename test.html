@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>اللعبة</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+</head>
+<body class="bg-gray-100 min-h-screen">
+
+
+    
+  <div id="gameModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+  <div class="bg-white rounded-lg shadow-lg w-[90%] max-w-2xl p-6 relative">
+    
+    <!-- زر إغلاق -->
+    <button onclick="closeModal()" class="absolute top-2 right-2 text-gray-600 hover:text-red-500 text-2xl font-bold">
+      &times;
+    </button>
+
+    <h2 class="text-2xl font-bold text-center mb-4 text-blue-600">📝 تعليمات اللعبة</h2>
+
+<div class="text-gray-800 space-y-3 text-right leading-loose">
+  <p>🎯 <strong>فكرة اللعبة:</strong> لعبة تفاعلية بينك وبين صاحبك، كل واحد بيجاوب على نفس الأسئلة، والتحدي هو: <span class="font-bold text-blue-700">مين فيكم يعرف التاني أكتر؟</span></p>
+
+  <p>🕹️ <strong>طريقة اللعب:</strong></p>
+  <ul class="list-disc pr-5">
+    <li>ادخل اسمك واسم صاحبك، واختار عدد الأسئلة (5، 10، 15 أو 20).</li>
+    <li>اللاعب الأول هيبدأ يجاوب على الأسئلة.</li>
+    <li>بعد كده، اللاعب التاني هيجاوب على نفس الأسئلة.</li>
+    <li>البرنامج هيقارن إجابات كل لاعب بإجابات التاني.</li>
+  </ul>
+
+  <p>📊 <strong>بعد الإجابة:</strong></p>
+  <ul class="list-disc pr-5">
+    <li>هتشوف تقرير مفصّل بالأسئلة الصح والغلط لكل لاعب.</li>
+    <li>فيه شارت (رسم بياني) يوضح السكور والنتيجة بشكل واضح.</li>
+    <li>كمان فيه دايرة لكل لاعب بتوضح نسبة صح/غلط.</li>
+  </ul>
+
+  <p>🧠 <strong>نصائح:</strong></p>
+  <ul class="list-disc pr-5">
+    <li>ركّز في اختياراتك وفكّر صاحبك هيجاوب إزاي.</li>
+    <li>لو مش لاقي اختيار مناسب، استخدم الاختيار المفتوح.</li>
+  </ul>
+
+  <p>✅ <strong>هدف اللعبة:</strong> المتعة والضحك، ونعرف مين فعلاً بيفهم صاحبه!</p>
+</div>
+
+  </div>
+</div>
+
+<!-- Header -->
+<header class="shadow-md bg-gradient-to-r from-blue-900 to-blue-800">
+  <nav class="container mx-auto">
+    <ul class="flex flex-row-reverse justify-between items-center p-4 px-6">
+      
+      <!-- زر التعليمات -->
+      <li onclick="openModal()" class="text-lg md:text-xl font-semibold text-orange-400 hover:text-white cursor-pointer transition duration-200 flex items-center gap-2">
+        <i class="fas fa-question-circle text-white"></i>
+        تعليمات
+      </li>
+
+      <!-- شعار -->
+     <a href="./index.html">
+        <img 
+          src="./pic/logo.png" 
+          alt="شعار التطبيق" 
+          width="90" 
+          height="90"
+          class="rounded-full border-4 border-white shadow-lg"
+        >
+      </li>
+
+      <!-- رابط المساهمات -->
+      <a href="history.html" class="text-lg md:text-xl font-semibold text-orange-400 hover:text-white cursor-pointer transition duration-200 flex items-center gap-2">
+        <i class="fas fa-clock-rotate-left text-white"></i>
+        المساهمات
+      </a>
+    </ul>
+  </nav>
+</header>
+
+  <section class="container mx-auto p-5">
+    <div class="bg-white shadow rounded p-6">
+      <h2 id="welcomeMessage" class="text-2xl font-bold text-center mb-6"></h2>
+
+      <div id="questionContainer" class="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+        <!-- الأسئلة ستظهر هنا -->
+      </div>
+
+      <div class="text-center mt-6">
+        <button id="nextPlayerBtn" onclick="nextPlayer()"
+          class="hidden bg-blue-600 text-white px-6 py-3 rounded hover:bg-blue-700 transition">
+          اللاعب التالي
+        </button>
+        <button id="endBtn" onclick="finishGame()"
+          class="hidden bg-green-600 text-white px-6 py-3 rounded hover:bg-green-700 transition">
+          إنهاء
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    let currentUserIndex = 0;
+    let users = JSON.parse(localStorage.getItem("currentUser2")) || [];
+
+    function renderQuestions() {
+      if (!users.length || !users[currentUserIndex]) return;
+
+      let user = users[currentUserIndex];
+      document.getElementById("welcomeMessage").textContent = `جاوب على الأسئلة دي يا ${user.name}`;
+      
+      let container = document.getElementById("questionContainer");
+      container.innerHTML = "";
+
+      user.Allquestion.forEach((q, qIndex) => {
+        let card = document.createElement("div");
+        card.className = "bg-gray-50 p-4 rounded shadow";
+
+        let html = `<h4 class="font-bold mb-2">س${qIndex + 1}: ${q.question}</h4>`;
+
+        q.options.forEach((opt, optIndex) => {
+          html += `
+            <label class="flex items-center justify-between bg-white p-2 rounded mb-2 border cursor-pointer">
+              <span>${opt}</span>
+              <input type="radio" name="question-${qIndex}" value="${optIndex}" 
+                onchange="saveAnswer(${qIndex}, ${optIndex})">
+            </label>
+          `;
+        });
+
+        card.innerHTML = html;
+        container.appendChild(card);
+      });
+
+      // التحكم في الأزرار
+      document.getElementById("nextPlayerBtn").classList.toggle("hidden", currentUserIndex !== 0);
+      document.getElementById("endBtn").classList.toggle("hidden", currentUserIndex !== 1);
+    }
+
+    function saveAnswer(qIndex, optIndex) {
+      users[currentUserIndex].Allquestion[qIndex].userAnswer = users[currentUserIndex].Allquestion[qIndex].options[optIndex];
+      localStorage.setItem("currentUser2", JSON.stringify(users));
+    }
+
+    function nextPlayer() {
+      currentUserIndex = 1;
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      renderQuestions();
+    }
+
+function finishGame() {
+  Swal.fire({
+    icon: 'success',
+    title: 'تم!',
+    text: "تمت اللعبة! يمكنك الآن عرض النتائج.",
+    confirmButtonText: 'حسناً',
+    confirmButtonColor: '#f97316'
+  }).then((result) => {
+    if (result.isConfirmed) {
+      // ✅ هنا تضع الكود الذي تريده بعد الضغط على "حسناً"
+      console.log("المستخدم ضغط على حسناً");
+      
+    
+      window.location.href = "result.html";
+      
+
+    }
+  });
+}
+
+
+    renderQuestions(); // أول تحميل للصفحة
+
+    
+  </script>
+  <script src="./main.js"></script>
+</body>
+</html>

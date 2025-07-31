@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>اللعبة</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+ <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+</head>
+<body class="bg-gray-100 min-h-screen">
+
+
+    
+  <div id="gameModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+  <div class="bg-white rounded-lg shadow-lg w-[90%] max-w-2xl p-6 relative">
+    
+    <!-- زر إغلاق -->
+    <button onclick="closeModal()" class="absolute top-2 right-2 text-gray-600 hover:text-red-500 text-2xl font-bold">
+      &times;
+    </button>
+
+    <h2 class="text-2xl font-bold text-center mb-4 text-blue-600">📝 تعليمات اللعبة</h2>
+<div class="text-gray-800 space-y-3 text-right leading-loose">
+  <p>🎯 <strong>فكرة اللعبة:</strong> لعبة تفاعلية بينك وبين صاحبك، كل واحد بيجاوب على نفس الأسئلة، والتحدي هو: <span class="font-bold text-blue-700">مين فيكم يعرف التاني أكتر؟</span></p>
+
+  <p>🕹️ <strong>طريقة اللعب:</strong></p>
+  <ul class="list-disc pr-5">
+    <li>ادخل اسمك واسم صاحبك، واختار عدد الأسئلة (5، 10، 15 أو 20).</li>
+    <li>اللاعب الأول هيبدأ يجاوب على الأسئلة.</li>
+    <li>بعد كده، اللاعب التاني هيجاوب على نفس الأسئلة.</li>
+    <li>البرنامج هيقارن إجابات كل لاعب بإجابات التاني.</li>
+  </ul>
+
+  <p>📊 <strong>بعد الإجابة:</strong></p>
+  <ul class="list-disc pr-5">
+    <li>هتشوف تقرير مفصّل بالأسئلة الصح والغلط لكل لاعب.</li>
+    <li>فيه شارت (رسم بياني) يوضح السكور والنتيجة بشكل واضح.</li>
+    <li>كمان فيه دايرة لكل لاعب بتوضح نسبة صح/غلط.</li>
+  </ul>
+
+  <p>🧠 <strong>نصائح:</strong></p>
+  <ul class="list-disc pr-5">
+    <li>ركّز في اختياراتك وفكّر صاحبك هيجاوب إزاي.</li>
+    <li>لو مش لاقي اختيار مناسب، استخدم الاختيار المفتوح.</li>
+  </ul>
+
+  <p>✅ <strong>هدف اللعبة:</strong> المتعة والضحك، ونعرف مين فعلاً بيفهم صاحبه!</p>
+</div>
+
+  </div>
+</div>
+
+<!-- Header -->
+<header class="shadow-md bg-gradient-to-r from-blue-900 to-blue-800">
+  <nav class="container mx-auto">
+    <ul class="flex flex-row-reverse justify-between items-center p-4 px-6">
+      
+      <!-- زر التعليمات -->
+      <li onclick="openModal()" class="text-lg md:text-xl font-semibold text-orange-400 hover:text-white cursor-pointer transition duration-200 flex items-center gap-2">
+        <i class="fas fa-question-circle text-white"></i>
+        تعليمات
+      </li>
+
+      <!-- شعار -->
+      <a href="./index.html">
+        <img 
+          src="./pic/logo.png" 
+          alt="شعار التطبيق" 
+          width="90" 
+          height="90"
+          class="rounded-full border-4 border-white shadow-lg"
+        >
+      </a>
+
+      <!-- رابط المساهمات -->
+      <a href="history.html" class="text-lg md:text-xl font-semibold text-orange-400 hover:text-white cursor-pointer transition duration-200 flex items-center gap-2">
+        <i class="fas fa-clock-rotate-left text-white"></i>
+        المساهمات
+      </a>
+    </ul>
+  </nav>
+</header>
+
+<section class="container mx-auto p-5 bg-white rounded mt-10 flex flex-col">
+  <h2 class="text-2xl font-bold text-center mb-6">تقرير مفصل</h2>
+  <div class="flex justify-center gap-4 mb-4">
+    <button onclick="showReport(0)" class=" player bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">اللاعب الأول</button>
+    <button onclick="showReport(1)" class=" player bg-purple-500 text-white px-4 py-2 rounded hover:bg-purple-600">اللاعب الثاني</button>
+  </div>
+  <div id="reportContainer" class="overflow-x-auto"></div>
+</section>
+
+<section class="container mx-auto p-5 bg-white rounded mt-10">
+  <h2 class="text-2xl font-bold text-center mb-6">نتائج اللاعبين</h2>
+
+  <!-- الرسم البياني العام -->
+  <div class="mb-10">
+    <canvas id="resultChart" height="120"></canvas>
+  </div>
+
+  <!-- رسم بياني لكل لاعب -->
+  <div class=" grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div class=" container mx-auto w-2/3 h-fit bg-gray-50 p-4 rounded shadow">
+      <h3 class="text-center font-bold mb-2 text-blue-600" id="player1Name"></h3>
+      <canvas id="player1Chart"></canvas>
+    </div>
+    <div class= " container mx-auto w-2/3 h-fit bg-gray-50 p-4 rounded shadow">
+      <h3 class="text-center font-bold mb-2 text-blue-600" id="player2Name"></h3>
+      <canvas class="" id="player2Chart"></canvas>
+    </div>
+  </div>
+</section>
+
+
+
+   <script>
+let playerReport1=[];  
+let playerReport2=[];
+let users = JSON.parse(localStorage.getItem("currentUser2")) || [];
+let btn=document.querySelectorAll(".player")
+btn[0].textContent=`الريبورت الخاص ب ${users[0].name}`
+btn[1].textContent=`الريبورت الخاص ب ${users[1].name}`
+function checkUserAnswer() {
+
+
+  let player1 = users[0];
+  let player2 = users[1];
+
+  // إعادة تعيين النتائج
+  player1.numberQuestionRight = 0;
+  player1.numberQuestionFalse = 0;
+  player2.numberQuestionRight = 0;
+  player2.numberQuestionFalse = 0;
+
+  // مقارنة إجابات اللاعب الأول مع إجابات اللاعب الثاني
+  player1.Allquestion.forEach((q1, index) => {
+    let correctAnswer = player2.Allquestion[index]?.answer;
+    if (q1.userAnswer === correctAnswer) {
+      player1.numberQuestionRight++;
+           playerReport1.push({
+        RightQuestion:q1,
+      })
+    } else {
+      player1.numberQuestionFalse++;
+      playerReport1.push({
+        WrongQuestion:q1,
+      })
+    }
+  });
+
+  // مقارنة إجابات اللاعب الثاني مع إجابات اللاعب الأول
+  player2.Allquestion.forEach((q2, index) => {
+    let correctAnswer = player1.Allquestion[index]?.answer;
+    if (q2.userAnswer === correctAnswer) {
+      player2.numberQuestionRight++;
+        playerReport2.push({
+        WrongQuestion:q2,
+      })
+    } else {
+      player2.numberQuestionFalse++;
+          playerReport2.push({
+        WrongQuestion:q2,
+      })
+    }
+  });
+
+  // حفظ السكور
+  player1.score = player1.numberQuestionRight;
+  player2.score = player2.numberQuestionRight;
+
+  // حفظ النتائج في Local Storage
+  localStorage.setItem("currentUser2", JSON.stringify(users));
+}
+
+checkUserAnswer()
+console.log(JSON.parse(localStorage.getItem("currentUser2")))
+
+function renderResultChart() {
+  const users = JSON.parse(localStorage.getItem("currentUser2")) || [];
+
+  const labels = users.map(user => user.name);
+  const correctData = users.map(user => user.numberQuestionRight);
+  const wrongData = users.map(user => user.numberQuestionFalse);
+  const scoreData = users.map(user => user.score);
+
+
+  // 🟩 شارت اللاعب الأول
+  document.getElementById('player1Name').textContent = users[0].name;
+  new Chart(document.getElementById('player1Chart'), {
+    type: 'doughnut',
+    data: {
+      labels: ['صح ✅', 'خطأ ❌'],
+      datasets: [{
+        data: [users[0].numberQuestionRight, users[0].numberQuestionFalse],
+        backgroundColor: ['#22C55E', '#F87171'],
+        borderWidth: 1
+      }]
+    },
+    options: {
+      plugins: {
+        legend: { position: 'bottom' },
+        title: {
+          display: true,
+          text: `تفاصيل ${users[0].name} السكور ${users[0].score}`,
+          font: { size: 16 }
+        }
+      }
+    }
+  });
+
+  // 🟥 شارت اللاعب الثاني
+  document.getElementById('player2Name').textContent = users[1].name;
+  new Chart(document.getElementById('player2Chart'), {
+    type: 'doughnut',
+    data: {
+      labels: ['صح ✅', 'خطأ ❌'],
+      datasets: [{
+        data: [users[1].numberQuestionRight, users[1].numberQuestionFalse],
+        backgroundColor: ['#22C55E', '#F87171'],
+        borderWidth: 1
+      }]
+    },
+    options: {
+      plugins: {
+        legend: { position: 'bottom' },
+        title: {
+          display: true,
+          text: `تفاصيل ${users[1].name } السكور ${users[0].score}`,
+          font: { size: 16 }
+        }
+      }
+    }
+  });
+}
+
+renderResultChart();
+function showReport(index) {
+  const user = users[index];
+  const opponent = users[1 - index];
+  const reportHTML = user.Allquestion.map((q, i) => {
+    const correctAnswer = opponent.Allquestion[i]?.answer || "غير متاحة";
+    const isCorrect = q.userAnswer === correctAnswer;
+
+    return `
+      <tr class="border-b">
+        <td class="p-2 text-right">${i + 1}</td>
+        <td class="p-2 text-right">${q.question}</td>
+        <td class="p-2 text-right">${q.userAnswer || "لم يُجب"}</td>
+        <td class="p-2 text-right">${correctAnswer}</td>
+        <td class="p-2 text-right">
+          ${isCorrect 
+            ? '<span class="text-green-600 font-bold">✔️ صحيح</span>' 
+            : '<span class="text-red-600 font-bold">❌ خطأ</span>'}
+        </td>
+      </tr>
+    `;
+  }).join("");
+
+  document.getElementById("reportContainer").innerHTML = `
+    <table class="w-full text-sm  text-gray-800 border border-gray-300 rounded overflow-hidden">
+      <thead class="bg-gray-200 text-gray-900 text-start ">
+        <tr class="text-start">
+          <th class="p-2">#</th>
+          <th class="p-2">السؤال</th>
+          <th class="p-2">إجابة ${user.name}</th>
+          <th class="p-2">الإجابة الصحيحة</th>
+          <th class="p-2">الحالة</th>
+        </tr>
+      </thead>
+      <tbody class="text-start">${reportHTML}</tbody>
+    </table>
+  `;
+}
+
+console.log(playerReport1)
+  localStorage.setItem("currentUser", JSON.stringify(users));
+   </script>
+  <script src="./main.js"></script>
+</body>
+</html>
