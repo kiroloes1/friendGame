@@ -122,6 +122,9 @@
 localStorage.setItem("ConfirmSelected",JSON.stringify(0)) 
     // method for select
 function selectNumber(value, targetButton) {
+
+UsersName()
+  
   let numberQuestion = parseInt(value);
 
   function shuffle(array) {
@@ -151,7 +154,40 @@ function selectNumber(value, targetButton) {
   }
 
   localStorage.setItem("ConfirmSelected", JSON.stringify(1));
+
+  
 }
+
+
+// method for config all data 
+function UsersName() {
+  const userInput = document.querySelectorAll("input");
+
+  const currentUser = []; 
+     
+  userInput.forEach(e => {
+    const userPlayerObject = {
+      name: e.value,
+      score:0,
+      numberQuestionRight:0,
+      numberQuestionFalse:0,
+      Allquestion:[],
+    };
+    currentUser.push(userPlayerObject);
+
+  });
+
+ history.push(currentUser)
+  localStorage.setItem("currentUser", JSON.stringify(currentUser));
+  localStorage.setItem("History",JSON.stringify(history));
+
+
+  
+
+
+}
+
+
 
 
 

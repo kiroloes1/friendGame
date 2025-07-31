@@ -136,7 +136,7 @@
       </div>
 
       <div class="flex justify-center">
-       <button onclick="UsersName(event)" type="submit" class=" mt-6 bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-lg font-semibold transition">يلا نبدأ الأسئلة</button>
+       <a href="./questions.html"   class=" mt-6 bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-lg font-semibold transition">يلا نبدأ الأسئلة</a>
   </div>
       </section>
   </main>
@@ -179,57 +179,6 @@ userInputs.forEach(input => {
   input.addEventListener("input", checkInputsFilled);
 });
 
-// method for config all data 
-function UsersName(event) {
-  const userInput = document.querySelectorAll("input");
-    event.preventDefault();
-  
-  const currentUser = []; 
-     
-  userInput.forEach(e => {
-    const userPlayerObject = {
-      name: e.value,
-      score:0,
-      numberQuestionRight:0,
-      numberQuestionFalse:0,
-      Allquestion:[],
-    };
-    currentUser.push(userPlayerObject);
-
-  });
-
- history.push(currentUser)
-  localStorage.setItem("currentUser", JSON.stringify(currentUser));
-  localStorage.setItem("History",JSON.stringify(history));
-
-  if(userInput[0].value===""){
-     Swal.fire({
-    icon: 'warning',
-    title: 'تنبيه',
-    text: 'من فضلك اًملاء الحقول اولا' ,
-    confirmButtonText: 'حسناً',
-    confirmButtonColor: '#f97316'
-  });
-  return;
-  }
-else if (JSON.parse(localStorage.getItem("ConfirmSelected")) === 0) {
-  Swal.fire({
-    icon: 'warning',
-    title: 'تنبيه',
-    text: 'من فضلك اختر عدد الأسئلة أولاً',
-    confirmButtonText: 'حسناً',
-    confirmButtonColor: '#f97316'
-  });
-  return;
-}
-
-if (JSON.parse(localStorage.getItem("ConfirmSelected"))) {
-  window.location.href = "questions.html"; // غير الاسم حسب صفحتك
-}
-  
-
-
-}
 
 
 
