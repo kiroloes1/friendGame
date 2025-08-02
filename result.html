@@ -137,7 +137,7 @@ function checkUserAnswer() {
   // مقارنة إجابات اللاعب الأول مع إجابات اللاعب الثاني
   player1.Allquestion.forEach((q1, index) => {
     let correctAnswer = player2.Allquestion[index]?.answer;
-    if (q1.userAnswer === correctAnswer) {
+    if ((q1.userAnswer === correctAnswer )&& q1.userAnswer!=="" ) {
       player1.numberQuestionRight++;
            playerReport1.push({
         RightQuestion:q1,
@@ -153,7 +153,7 @@ function checkUserAnswer() {
   // مقارنة إجابات اللاعب الثاني مع إجابات اللاعب الأول
   player2.Allquestion.forEach((q2, index) => {
     let correctAnswer = player1.Allquestion[index]?.answer;
-    if (q2.userAnswer === correctAnswer) {
+    if ((q2.userAnswer === correctAnswer)&&q2.userAnswer!=="" ) {
       player2.numberQuestionRight++;
         playerReport2.push({
         WrongQuestion:q2,
@@ -227,7 +227,7 @@ function renderResultChart() {
         legend: { position: 'bottom' },
         title: {
           display: true,
-          text: `تفاصيل ${users[1].name } السكور ${users[0].score}`,
+          text: `تفاصيل ${users[1].name } السكور ${users[1].score}`,
           font: { size: 16 }
         }
       }
@@ -277,7 +277,7 @@ function showReport(index) {
 }
 
 console.log(playerReport1)
-  localStorage.setItem("currentUser", JSON.stringify(users));
+
    </script>
   <script src="./main.js"></script>
 </body>

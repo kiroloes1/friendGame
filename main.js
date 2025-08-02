@@ -121,11 +121,11 @@
 
 localStorage.setItem("ConfirmSelected",JSON.stringify(0)) 
     // method for select
+
 function selectNumber(value, targetButton) {
 
-UsersName()
-  
-  let numberQuestion = parseInt(value);
+  UsersName()
+ numberQuestion = parseInt(value);
 
   function shuffle(array) {
     return array.sort(() => Math.random() - 0.5);
@@ -149,7 +149,7 @@ UsersName()
   const buttons = document.querySelectorAll("button");
   buttons.forEach(btn => btn.classList.remove("bg-green-600"));
 
-  if (targetButton) {
+  if (1) {
     targetButton.classList.add("bg-green-600");
   }
 
@@ -158,13 +158,14 @@ UsersName()
   
 }
 
+  const userInput = document.querySelectorAll("input");
 
 // method for config all data 
 function UsersName() {
-  const userInput = document.querySelectorAll("input");
 
   const currentUser = []; 
-     
+  
+
   userInput.forEach(e => {
     const userPlayerObject = {
       name: e.value,
@@ -173,18 +174,49 @@ function UsersName() {
       numberQuestionFalse:0,
       Allquestion:[],
     };
+   
     currentUser.push(userPlayerObject);
 
   });
 
+
  history.push(currentUser)
   localStorage.setItem("currentUser", JSON.stringify(currentUser));
   localStorage.setItem("History",JSON.stringify(history));
-
-
   
+}
 
+function go(){
+     
 
+  if (!(userInput[0].value.trim())) {
+  Swal.fire({
+    icon: 'warning',
+    title: 'تحذير',
+    text: 'لا يمكنك المتابعة. الرجاء ادخال اسم اللاعب الاول أولاً',
+    confirmButtonText: 'حسنًا',
+ 
+  });
+}
+else if(!(userInput[1].value.trim())){
+    Swal.fire({
+    icon: 'warning',
+    title: 'تحذير',
+    text: 'لا يمكنك المتابعة. الرجاء ادخال اسم اللاعب الثاني أولاً',
+    confirmButtonText: 'حسنًا'
+  });
+}
+else if(!numberQuestion){
+    Swal.fire({
+    icon: 'warning',
+    title: 'تحذير',
+    text: 'لا يمكنك المتابعة. الرجاء ادخال عدد الاسئله اولا',
+    confirmButtonText: 'حسنًا'
+  });
+}
+if(userInput[0].value.trim() &&userInput[1].value.trim()&& numberQuestion){
+   window.location.href = "questions.html";
+}
 }
 
 

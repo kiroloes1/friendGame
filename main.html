@@ -128,15 +128,15 @@
       <div class="my-10 countOfQuestion hidden">
         <h4 class="text-center text-xl font-semibold text-gray-700 mb-4">اختار عدد الأسئلة</h4>
         <div class="flex flex-wrap gap-4 justify-center">
-          <button onclick="selectNumber(this.value)" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2 rounded-lg transition " value="5">5 أسئلة</button>
-          <button onclick="selectNumber(this.value)" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2 rounded-lg transition " value="10">10 أسئلة</button>
-          <button onclick="selectNumber(this.value)" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2 rounded-lg transition " value="15">15 أسئلة</button>
-          <button onclick="selectNumber(this.value)" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2 rounded-lg transition " value="20">20 أسئلة</button>
+          <button onclick="selectNumber(this.value, this)" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2 rounded-lg transition " value="5">5 أسئلة</button>
+          <button onclick="selectNumber(this.value, this)" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2 rounded-lg transition " value="10">10 أسئلة</button>
+          <button onclick="selectNumber(this.value, this)" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2 rounded-lg transition " value="15">15 أسئلة</button>
+          <button onclick="selectNumber(this.value, this)" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2 rounded-lg transition " value="20">20 أسئلة</button>
         </div>
       </div>
 
       <div class="flex justify-center">
-       <a href="./questions.html"   class=" mt-6 bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-lg font-semibold transition">يلا نبدأ الأسئلة</a>
+       <button onclick="go()"  class="go mt-6 bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-lg font-semibold transition">يلا نبدأ الأسئلة</button>
   </div>
       </section>
   </main>
@@ -161,9 +161,10 @@
 // all user enter the playGame
 let history=JSON.parse(localStorage.getItem("History")) ||[];
 
-
 const userInputs = document.querySelectorAll("input");
 const countSection = document.querySelector(".countOfQuestion");
+
+
 
 // دالة للتشييك التلقائي
 function checkInputsFilled() {
@@ -178,6 +179,10 @@ function checkInputsFilled() {
 userInputs.forEach(input => {
   input.addEventListener("input", checkInputsFilled);
 });
+
+
+
+
 
 
 
