@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>صفحة المساهمات</title>
+  <link rel="stylesheet" href="./style.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 ">
+
+    
+  <div style="height: 100vh;" id="gameModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden h-fit ">
+  <div class="bg-white rounded-lg shadow-lg w-[90%] max-w-xl p-6 relative h-80 overflow-auto">
+    
+    <!-- زر إغلاق -->
+    <button onclick="closeModal()" class="absolute top-2 right-2 text-gray-600 hover:text-red-500 text-2xl font-bold">
+      &times;
+    </button>
+
+    <h2 class="text-2xl font-bold text-center mb-4 text-blue-600">📝 تعليمات اللعبة</h2>
+
+<div class="text-gray-800 space-y-3 text-right leading-loose">
+  <p>🎯 <strong>فكرة اللعبة:</strong> لعبة تفاعلية بينك وبين صاحبك، كل واحد بيجاوب على نفس الأسئلة، والتحدي هو: <span class="font-bold text-blue-700">مين فيكم يعرف التاني أكتر؟</span></p>
+
+  <p>🕹️ <strong>طريقة اللعب:</strong></p>
+  <ul class="list-disc pr-5">
+    <li>ادخل اسمك واسم صاحبك، واختار عدد الأسئلة (5، 10، 15 أو 20).</li>
+    <li>اللاعب الأول هيبدأ يجاوب على الأسئلة.</li>
+    <li>بعد كده، اللاعب التاني هيجاوب على نفس الأسئلة.</li>
+    <li>البرنامج هيقارن إجابات كل لاعب بإجابات التاني.</li>
+  </ul>
+
+  <p>📊 <strong>بعد الإجابة:</strong></p>
+  <ul class="list-disc pr-5">
+    <li>هتشوف تقرير مفصّل بالأسئلة الصح والغلط لكل لاعب.</li>
+    <li>فيه شارت (رسم بياني) يوضح السكور والنتيجة بشكل واضح.</li>
+    <li>كمان فيه دايرة لكل لاعب بتوضح نسبة صح/غلط.</li>
+  </ul>
+
+  <p>🧠 <strong>نصائح:</strong></p>
+  <ul class="list-disc pr-5">
+    <li>ركّز في اختياراتك وفكّر صاحبك هيجاوب إزاي.</li>
+    <li>لو مش لاقي اختيار مناسب، استخدم الاختيار المفتوح.</li>
+  </ul>
+
+  <p>✅ <strong>هدف اللعبة:</strong> المتعة والضحك، ونعرف مين فعلاً بيفهم صاحبه!</p>
+</div>
+
+  </div>
+</div>
+
+<!-- Header -->
+<header class="shadow-md bg-gradient-to-r mb-10 from-blue-900 to-blue-800">
+  <nav class="container mx-auto">
+    <ul class="flex flex-row-reverse justify-between items-center p-4 px-6">
+      
+      <!-- زر التعليمات -->
+      <li onclick="openModal()" class="text-lg md:text-xl font-semibold text-orange-400 hover:text-white cursor-pointer transition duration-200 flex items-center gap-2">
+        <i class="fas fa-question-circle text-white"></i>
+        تعليمات
+      </li>
+
+      <!-- شعار -->
+     <a href="./index.html">
+        <img 
+          src="./pic/logo.png" 
+          alt="شعار التطبيق" 
+          width="90" 
+          height="90"
+          class="rounded-full border-4 border-white shadow-lg"
+        >
+      </li>
+
+      <!-- رابط المساهمات -->
+      <a href="history.html" class="text-lg md:text-xl font-semibold text-orange-400 hover:text-white cursor-pointer transition duration-200 flex items-center gap-2">
+        <i class="fas fa-clock-rotate-left text-white"></i>
+        المساهمات
+      </a>
+    </ul>
+  </nav>
+</header>
+  <div class="max-w-4xl mx-auto bg-white p-6 rounded shadow">
+    <h1 class="text-2xl font-bold mb-4 text-center text-blue-800">📜 سجل المساهمات (History)</h1>
+
+    <div id="historyContainer" class="space-y-4"></div>
+
+    <button onclick="clearAllHistory()" class="mt-6 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded">
+      🗑️ مسح كل الجولات
+    </button>
+  </div>
+
+  <script>
+    let history = JSON.parse(localStorage.getItem("history")) || [];
+
+    function renderHistory() {
+      const container = document.getElementById("historyContainer");
+      container.innerHTML = "";
+
+      if (history.length === 0) {
+        container.innerHTML = '<p class="text-center text-gray-600">لا توجد جولات محفوظة حالياً.</p>';
+        return;
+      }
+
+      history.forEach((round, index) => {
+        const player1 = round[0];
+        const player2 = round[1];
+
+        const html = `
+          <div class="border border-gray-300 rounded p-4 bg-gray-50 shadow">
+            <h2 class="text-lg font-bold text-gray-800 mb-2">جولة رقم ${index + 1}</h2>
+            <p>👤 ${player1.name} ✅ ${player1.numberQuestionRight} ❌ ${player1.numberQuestionFalse}</p>
+            <p>👤 ${player2.name} ✅ ${player2.numberQuestionRight} ❌ ${player2.numberQuestionFalse}</p>
+            <div class="mt-2 flex gap-4">
+              <button onclick="showReport(${index})" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded">
+                عرض التقرير 📋
+              </button>
+              <button onclick="deleteRound(${index})" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded">
+                حذف 🗑️
+              </button>
+            </div>
+          </div>
+        `;
+        container.innerHTML += html;
+      });
+    }
+
+    function deleteRound(index) {
+      Swal.fire({
+        title: 'هل أنت متأكد؟',
+        text: "لن يمكنك التراجع بعد الحذف!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'نعم، احذفها',
+        cancelButtonText: 'إلغاء'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          history.splice(index, 1);
+          localStorage.setItem("history", JSON.stringify(history));
+          renderHistory();
+          Swal.fire('تم الحذف!', 'تم حذف هذه الجولة بنجاح.', 'success');
+        }
+      });
+    }
+
+    function clearAllHistory() {
+      Swal.fire({
+        title: 'مسح كل الجولات؟',
+        text: "سيتم حذف جميع المساهمات!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'نعم، امسح الكل',
+        cancelButtonText: 'إلغاء'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          localStorage.removeItem("history");
+          history = [];
+          renderHistory();
+          Swal.fire('تم المسح!', 'تم مسح جميع الجولات بنجاح.', 'success');
+        }
+      });
+    }
+
+  function showReport(index) {
+  const reportId = `report-${index}`;
+  const existing = document.getElementById(reportId);
+
+  // لو التقرير معروض، نخفيه
+  if (existing) {
+    existing.remove();
+    return;
+  }
+
+  const round = history[index];
+  const player1 = round[0];
+  const player2 = round[1];
+
+  const createTable = (player) => {
+    const rows = player.Allquestion.map((q, i) => {
+      const isCorrect = q.userAnswer === q.answer;
+      return `
+        <tr class="border-b text-sm">
+          <td class="p-2 text-right">${i + 1}</td>
+          <td class="p-2 text-right">${q.question}</td>
+          <td class="p-2 text-right">${q.userAnswer || "لم يُجب"}</td>
+          <td class="p-2 text-right">${q.answer || "؟"}</td>
+          <td class="p-2 text-right">
+            ${isCorrect 
+              ? '<span class="text-green-600 font-bold">✔️ صحيح</span>' 
+              : '<span class="text-red-600 font-bold">❌ خطأ</span>'}
+          </td>
+        </tr>
+      `;
+    }).join("");
+
+    return `
+      <div class="mt-4">
+        <h3 class="text-md font-semibold text-blue-700 mb-1">📌 ${player.name.trim()}</h3>
+        <table class="w-full border border-gray-300 text-right bg-white">
+          <thead class="bg-gray-100">
+            <tr>
+              <th class="p-2">#</th>
+              <th class="p-2">السؤال</th>
+              <th class="p-2">إجابة اللاعب</th>
+              <th class="p-2">الإجابة الصحيحة</th>
+              <th class="p-2">النتيجة</th>
+            </tr>
+          </thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </div>
+    `;
+  };
+
+  const html = `
+    <div id="${reportId}" class="mt-4 bg-gray-50 border-t border-gray-300 pt-4">
+      ${createTable(player1)}
+      ${createTable(player2)}
+    </div>
+  `;
+
+  const container = document.getElementById("historyContainer");
+  const allRounds = container.querySelectorAll(".border");
+  allRounds[index].insertAdjacentHTML("beforeend", html);
+}
+
+
+    renderHistory();
+  </script>
+
+  <script src="./main.js"></script>
+</body>
+</html>

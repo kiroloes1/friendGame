@@ -13,8 +13,8 @@
 
 
     
-  <div id="gameModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
-  <div class="bg-white rounded-lg shadow-lg w-[90%] max-w-2xl p-6 relative">
+  <div style="height: 100vh;" id="gameModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden h-fit ">
+  <div class="bg-white rounded-lg shadow-lg w-[90%] max-w-xl p-6 relative h-80 overflow-auto">
     
     <!-- زر إغلاق -->
     <button onclick="closeModal()" class="absolute top-2 right-2 text-gray-600 hover:text-red-500 text-2xl font-bold">
@@ -136,7 +136,7 @@ function checkUserAnswer() {
 
   // مقارنة إجابات اللاعب الأول مع إجابات اللاعب الثاني
   player1.Allquestion.forEach((q1, index) => {
-    let correctAnswer = player2.Allquestion[index]?.answer;
+    let correctAnswer = player1.Allquestion[index]?.answer;
     if ((q1.userAnswer === correctAnswer )&& q1.userAnswer!=="" ) {
       player1.numberQuestionRight++;
            playerReport1.push({
@@ -152,7 +152,7 @@ function checkUserAnswer() {
 
   // مقارنة إجابات اللاعب الثاني مع إجابات اللاعب الأول
   player2.Allquestion.forEach((q2, index) => {
-    let correctAnswer = player1.Allquestion[index]?.answer;
+    let correctAnswer = player2.Allquestion[index]?.answer;
     if ((q2.userAnswer === correctAnswer)&&q2.userAnswer!=="" ) {
       player2.numberQuestionRight++;
         playerReport2.push({
@@ -238,7 +238,7 @@ function renderResultChart() {
 renderResultChart();
 function showReport(index) {
   const user = users[index];
-  const opponent = users[1 - index];
+  const opponent = users[index];
   const reportHTML = user.Allquestion.map((q, i) => {
     const correctAnswer = opponent.Allquestion[i]?.answer || "غير متاحة";
     const isCorrect = q.userAnswer === correctAnswer;
@@ -273,10 +273,14 @@ function showReport(index) {
     </table>
   `;
 
-  localStorage.removeItem("currentUser2")
+  
 }
 
-console.log(playerReport1)
+let history=JSON.parse(localStorage.getItem("history"))||[];
+history.push(JSON.parse(localStorage.getItem("currentUser2")));
+localStorage.setItem("history", JSON.stringify(history));
+
+console.log(playerReport1);
 
    </script>
   <script src="./main.js"></script>
